@@ -9,24 +9,16 @@ const App = () => {
 
   const [selectedCategory, setSelectedCategory] = useState('');
 
-  const productIsInSelectedCategory = (productCategories: Array<string>) => {
-    return productCategories.includes(selectedCategory);
+  const productIsInSelectedCategoryOrNoCategory = (productCategories: Array<string>) => {
+    return productCategories.includes(selectedCategory) || selectedCategory === '';
   }
 
   const renderProduct = (product: Product, i: number) => {
-    if (selectedCategory === '') {    
-      return (
-        <li key={i}>
-        <p>{product.title}</p>
-        <p>{product.description}</p>
-      </li>
-    );
-   }
-  return productIsInSelectedCategory(product.categories) ?
+    return productIsInSelectedCategoryOrNoCategory(product.categories) ?
     (
       <li key={i}>
         <p>{product.title}</p>
-        <p>{product.description}</p>
+        {/* <p>{product.description}</p> */}
       </li>
     ) :
     null;
@@ -52,7 +44,8 @@ const App = () => {
       <ul className="products">
         {products.map((product: Product, i) => {
           return renderProduct(product, i)
-          })}
+          })
+        }
       </ul>
     </>
   );

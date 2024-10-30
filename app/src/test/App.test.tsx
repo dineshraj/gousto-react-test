@@ -140,6 +140,19 @@ describe('App', () => {
       expect(renderedProductTwoTitle).not.toBeInTheDocument();
     });
 
+    it('does not display product descriptions by default', async () => {
+      render(<App />);
+  
+      const renderedProductOneTitle = await screen.findByText(mockProducts.data[0].title);
+
+      expect(renderedProductOneTitle).toBeInTheDocument();
+
+      const renderedProductOneDescription = screen.queryByText(mockProducts.data[0].description);
+      const renderedProductTwoDescription = screen.queryByText(mockProducts.data[1].description);
+      expect(renderedProductOneDescription).not.toBeInTheDocument();
+      expect(renderedProductTwoDescription).not.toBeInTheDocument();
+    });
+
     it.skip('clicking on a product displays the description', () => {
 
     });
