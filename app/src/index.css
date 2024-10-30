@@ -22,3 +22,20 @@ code {
   list-style: none;
   width: 160px;
 }
+
+.categories li button {
+  background: none;
+  border: none;
+  font-size: 16px;
+}
+
+.categories li button:focus,
+.categories li button:hover,
+.categories li button:selected {
+  text-decoration: underline;
+}
+
+.selected {
+  font-weight: bold;
+  text-decoration: underline;
+}

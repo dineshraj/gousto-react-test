@@ -1,38 +1,57 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PRODUCTS, CATEGORIES } from "./constants/data";
 import { Product, Category } from "./types";
+import useFetchData from './hooks/useFetchData';
 
 const App = () => {
-  const [categories, setCategories] = useState([]);
-  const [products, setProducts] = useState([]);
+  const categories = useFetchData(CATEGORIES);
+  const products = useFetchData(PRODUCTS);
 
-  const fetchData = async (url: string, setter: Function) => {
-    const response = await fetch(url);
-    const json = await response.json();
+  const [selectedCategory, setSelectedCategory] = useState('');
 
-    setter(json.data);
-  };
+  const productIsInSelectedCategory = (productCategories: Array<string>) => {
+    return productCategories.includes(selectedCategory);
+  }
 
-  useEffect(() => {
-    fetchData(CATEGORIES, setCategories);
-    fetchData(PRODUCTS, setProducts);
-  }, []);
+  const renderProduct = (product: Product, i: number) => {
+    if (selectedCategory === '') {    
+      return (
+        <li key={i}>
+        <p>{product.title}</p>
+        <p>{product.description}</p>
+      </li>
+    );
+   }
+  return productIsInSelectedCategory(product.categories) ?
+    (
+      <li key={i}>
+        <p>{product.title}</p>
+        <p>{product.description}</p>
+      </li>
+    ) :
+    null;
+  }
 
   return (
     <>
       <ul className="categories">
         {categories.map((category: Category, i) => {
-          return !category.hidden && <li key={i}>{category.title}</li>
+          return (
+            !category.hidden &&
+            <li key={i}>
+              <button 
+                className={(selectedCategory === category.id) ? 'selected' : undefined}
+                onClick={() => setSelectedCategory(category.id)}
+              >
+                {category.title}
+              </button>
+            </li>
+          )
         })}
       </ul>
       <ul className="products">
         {products.map((product: Product, i) => {
-          return (
-            <li key={i}>
-              <p>{product.title}</p>
-              <p>{product.description}</p>
-            </li>
-          )
+          return renderProduct(product, i)
           })}
       </ul>
     </>
