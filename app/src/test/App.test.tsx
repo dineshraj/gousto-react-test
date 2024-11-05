@@ -242,16 +242,24 @@ describe('App', () => {
       expect(renderedProductTwoTitle).not.toBeInTheDocument();
     });
 
-    it('scopes the search within the selected category', () => {
+    it('scopes the search within the selected category', async () => {
+      renderApp();
 
+      const searchInput = await screen.findByTestId('search');
+
+      const renderedProductOneTitle = await screen.findByText(mockProducts.data[0].title);
+      const renderedProductTwoTitle = screen.queryByText(mockProducts.data[1].title);
+
+      expect(renderedProductOneTitle).toBeInTheDocument();
+      expect(renderedProductTwoTitle).toBeInTheDocument();
+
+      const categoryLink = await screen.findByText(mockCategories.data[0].title);
+      userEvent.click(categoryLink);
+
+      fireEvent.change(searchInput, {target: { value: 'product' }})
+
+      expect(renderedProductOneTitle).toBeInTheDocument();
+      expect(renderedProductTwoTitle).not.toBeInTheDocument();
     });
   })
-
 })
-
-
-/*
-@TODO
-  - make the URL pretty so the category id is the category title
-  - make the browser history (when you hold down on the arrow) reflect that
-*/

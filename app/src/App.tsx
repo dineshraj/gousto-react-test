@@ -26,7 +26,7 @@ const App = () => {
       const category: CategoryType =
       categories
       .find((category: CategoryType) => category.id === categoryIdFromUrl) as unknown as CategoryType;
-
+      
       if (category) {
         return category.title;
       }
