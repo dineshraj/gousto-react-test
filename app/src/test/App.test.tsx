@@ -126,6 +126,15 @@ describe('App', () => {
 
       expect(categoryLink).toHaveClass('selected');
     });
+
+    it('changes the page title when a category is selected', async () => {
+      renderApp();
+
+      const categoryLink = await screen.findByText(mockCategories.data[0].title);
+      userEvent.click(categoryLink);
+
+      expect(document.title).toBe('categoryOneTitle');
+    });
   });
 
   describe('Products', () => {

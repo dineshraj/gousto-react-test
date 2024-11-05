@@ -6,9 +6,10 @@ import useFetchData from './hooks/useFetchData';
 import Product from "./components/Prooduct";
 
 const App = () => {
-  const location = useLocation();
   const categories = useFetchData(CATEGORIES);
   const products = useFetchData(PRODUCTS);
+  
+  const location = useLocation();
 
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedProduct, setSelectedProduct] = useState('');
@@ -16,19 +17,19 @@ const App = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const categoryFromUrl = params.get('category') || '';
-    setSelectedCategory(categoryFromUrl);
-    document.title = getCategoryFromId(selectedCategory);
-  }, [location.search])
+    const categoryIdFromUrl = params.get('category') || '';
+    setSelectedCategory(categoryIdFromUrl);
+    document.title = getCategoryFromId(categoryIdFromUrl) || document.title;
+  }, [location.search, categories])
 
-  const getCategoryFromId = (selectedCategory: string) => {
-      if (selectedCategory === '') return 'Full product list';
-
+  const getCategoryFromId = (categoryIdFromUrl: string) => {
       const category: CategoryType =
       categories
-        .find((category: CategoryType) => category.id === selectedCategory) as unknown as CategoryType;
+      .find((category: CategoryType) => category.id === categoryIdFromUrl) as unknown as CategoryType;
 
-      return category.title;
+      if (category) {
+        return category.title;
+      }
   }
 
   const productIsInSelectedCategoryOrNoCategory = (productCategories: Array<string>) => {
