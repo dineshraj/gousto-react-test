@@ -8,4 +8,5 @@ export interface Product {
   title: string;
   description: string;
   categories: Array<string>;
+  id: string;
 }
