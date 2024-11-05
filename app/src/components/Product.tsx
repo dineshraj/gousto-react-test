@@ -8,14 +8,14 @@ interface ProductProps {
 
 const Product = ({ selectedProduct, product, handleClick}: ProductProps) => {
   return (
-    <li className="product">
+    <>
       <button 
         className={`product__button${(selectedProduct === product.id) ? ' selected' : ''}`}
         onClick={() => handleClick(product.id)}>
           {product.title}
       </button>
-      {selectedProduct === product.id && <p className="product__descriptiom">{product.description}</p>}
-    </li>
+      {selectedProduct === product.id && <p data-testid="product-description" className="product__descriptiom">{product.description}</p>}
+    </>
   )
 };
 

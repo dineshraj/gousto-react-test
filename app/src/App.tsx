@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { PRODUCTS, CATEGORIES } from "./constants/data";
 import { Product as ProductType, Category as CategoryType } from "./types";
 import useFetchData from './hooks/useFetchData';
-import Product from "./components/Prooduct";
-import Category from "./components/Category";
+import Product from "./Components/Product";
+import Category from "./Components/Category";
+import Search from "./Components/Search";
 
 const App = () => {
   const categories = useFetchData(CATEGORIES);
@@ -51,11 +52,11 @@ const App = () => {
     setSearchTerm(target.value.toLowerCase());
   }
 
-  const renderProduct = (product: ProductType, i: number) => {
+  const renderProduct = (product: ProductType) => {
     return (
       productIsInSelectedCategoryOrNoCategory(product.categories) &&
       productIsInSearchTermOrNoSearchTerm(product.title) ?
-        <Product key={i} selectedProduct={selectedProduct} product={product} handleClick={toggleSelectedProduct} /> : null
+        <Product selectedProduct={selectedProduct} product={product} handleClick={toggleSelectedProduct} /> : null
     )
   }
 
@@ -65,21 +66,14 @@ const App = () => {
         {categories.map((category: CategoryType, i) => {
           return (
             !category.hidden &&
-            <Category category={category} selectedCategory={selectedCategory} clickHandler={setSelectedCategory} />
+            <li key={i}><Category category={category} selectedCategory={selectedCategory} clickHandler={setSelectedCategory}/></li>
           )
         })}
       </ul>
-      <input 
-        type="search"
-        name="search"
-        className="search"
-        value={searchTerm}
-        data-testid="search"
-        onChange={handleSearchTermInput}
-      />
+      <Search searchTerm={searchTerm} handleSearchTermInput={handleSearchTermInput} />
       <ul className="products">
         {products.map((product: ProductType, i) => {
-          return renderProduct(product, i)
+          return <li className="product" key={i}>{renderProduct(product)}</li>
           })
         }
       </ul>
