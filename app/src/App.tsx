@@ -4,6 +4,7 @@ import { PRODUCTS, CATEGORIES } from "./constants/data";
 import { Product as ProductType, Category as CategoryType } from "./types";
 import useFetchData from './hooks/useFetchData';
 import Product from "./components/Prooduct";
+import Category from "./components/Category";
 
 const App = () => {
   const categories = useFetchData(CATEGORIES);
@@ -64,15 +65,7 @@ const App = () => {
         {categories.map((category: CategoryType, i) => {
           return (
             !category.hidden &&
-            <li key={i}>
-              <Link
-                to={`?category=${category.id}`}
-                className={(selectedCategory === category.id) ? 'selected' : ''}
-                onClick={() => setSelectedCategory(category.id)}
-              >
-                {category.title}
-              </Link>
-            </li>
+            <Category category={category} selectedCategory={selectedCategory} clickHandler={setSelectedCategory} />
           )
         })}
       </ul>
