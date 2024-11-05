@@ -1,4 +1,5 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 
 import App from '../App';
@@ -47,6 +48,14 @@ const mockProducts = {
   ]
 }
 
+const renderApp = () => (
+  render(
+    <MemoryRouter>
+      <App />
+    </MemoryRouter>
+  )
+);
+
 const fetchMock = () => {
   jest.spyOn(global, 'fetch')
     .mockResolvedValueOnce({
@@ -73,7 +82,7 @@ describe('App', () => {
           ok: false,
         } as unknown as Response);
       
-      render(<App />);
+      renderApp();
 
       await waitFor(() => {
         expect(consoleLogSpy).toBeCalledWith('Error fetching data');
@@ -88,7 +97,7 @@ describe('App', () => {
     })
 
     it('fetches the category data correctly', async () => {
-      render(<App />);
+      renderApp();
   
       const renderedCategoryOneTitle = await screen.findByText(mockCategories.data[0].title);
       const renderedCategoryTwoTitle = await screen.findByText(mockCategories.data[1].title);
@@ -98,7 +107,7 @@ describe('App', () => {
     });
   
     it('does not display categories which are hidden', async () => {
-      render(<App />);
+      renderApp();
       
       await waitFor(() => {
         const renderedCategoryTwoTitle = screen.queryByText(mockCategories.data[1].title);
@@ -107,6 +116,15 @@ describe('App', () => {
   
       const renderedCategoryThreeTitle = screen.queryByText(mockCategories.data[2].title);
       expect(renderedCategoryThreeTitle).not.toBeInTheDocument();
+    });
+
+    it('adds a selected class when clicking on a category', async () => {
+      renderApp();
+
+      const categoryLink = await screen.findByText(mockCategories.data[0].title);
+      userEvent.click(categoryLink);
+
+      expect(categoryLink).toHaveClass('selected');
     });
   });
 
@@ -117,7 +135,7 @@ describe('App', () => {
     })
 
     it('fetches the product title correctly', async () => {
-      render(<App />);
+      renderApp();
   
       const renderedProductOneTitle = await screen.findByText(mockProducts.data[0].title);
       const renderedProductTwoTitle = await screen.findByText(mockProducts.data[1].title);
@@ -127,21 +145,20 @@ describe('App', () => {
     });
 
     it('only displays the products of the selected category', async () => {
-      render(<App />);
-      const categoryButton = await screen.findByRole('button', { name: 'categoryOneTitle'});
-      userEvent.click(categoryButton);
+      renderApp();
+      const categoryLink = await screen.findByText(mockCategories.data[0].title);
+      userEvent.click(categoryLink);
 
-      await waitFor(() => {
-        const renderedProductOneTitle = screen.queryByText(mockProducts.data[0].title);
-        expect(renderedProductOneTitle).toBeInTheDocument();
-      });
+      const renderedProductOneTitle = await screen.findByText(mockProducts.data[0].title);
+      expect(renderedProductOneTitle).toBeInTheDocument();
+
   
       const renderedProductTwoTitle = screen.queryByText(mockProducts.data[1].title);
       expect(renderedProductTwoTitle).not.toBeInTheDocument();
     });
 
     it('does not display product descriptions by default', async () => {
-      render(<App />);
+      renderApp();
   
       const renderedProductOneTitle = await screen.findByText(mockProducts.data[0].title);
 
@@ -153,14 +170,67 @@ describe('App', () => {
       expect(renderedProductTwoDescription).not.toBeInTheDocument();
     });
 
-    it.skip('clicking on a product displays the description', () => {
+    it('clicking on a product displays the description', async () => {
+      renderApp();
 
+      const productButton = await screen.findByRole('button', { name: mockProducts.data[0].title});
+
+      const renderedProductOneTitle = screen.queryByText(mockProducts.data[0].description);
+      expect(renderedProductOneTitle).not.toBeInTheDocument();
+
+      userEvent.click(productButton);
+
+      const renderedProductOneDescription = screen.queryByText(mockProducts.data[0].description);
+      expect(renderedProductOneDescription).toBeInTheDocument();
+    });
+
+    it('clicking on a product twices displays and then removes the description', async () => {
+      renderApp();
+
+      const productButton = await screen.findByRole('button', { name: mockProducts.data[0].title});
+
+      const renderedProductOneTitle = screen.queryByText(mockProducts.data[0].description);
+      expect(renderedProductOneTitle).not.toBeInTheDocument();
+
+      userEvent.click(productButton);
+
+      const renderedProductOneDescription = screen.queryByText(mockProducts.data[0].description);
+      expect(renderedProductOneDescription).toBeInTheDocument();
+
+      userEvent.click(productButton);
+      expect(renderedProductOneDescription).not.toBeInTheDocument();
+    });
+
+    it('adds a selected class when clicking on a product', async () => {
+      renderApp();
+
+      const productButton = await screen.findByRole('button', { name: mockProducts.data[0].title});
+      userEvent.click(productButton);
+      
+      expect(productButton).toHaveClass('selected');
     });
   });
 
-  describe.skip('Search', () => {
-    it('only lists products that have been searched for', () => {
+  describe('Search', () => {
+    beforeEach(() => {
+      fetchMock();
+    })
 
+    it('only lists products that have been searched for', async () => {
+      renderApp();
+
+      const searchInput = await screen.findByTestId('search');
+      
+      const renderedProductOneTitle = await screen.findByText(mockProducts.data[0].title);
+      const renderedProductTwoTitle = screen.queryByText(mockProducts.data[1].title);
+      
+      expect(renderedProductOneTitle).toBeInTheDocument();
+      expect(renderedProductTwoTitle).toBeInTheDocument();
+      
+      fireEvent.change(searchInput, {target: { value: 'title1' }})
+
+      expect(renderedProductOneTitle).toBeInTheDocument();
+      expect(renderedProductTwoTitle).not.toBeInTheDocument();
     });
 
     it('scopes the search within the selected category', () => {
@@ -169,3 +239,10 @@ describe('App', () => {
   })
 
 })
+
+
+/*
+@TODO
+  - make the URL pretty so the category id is the category title
+  - make the browser history (when you hold down on the arrow) reflect that
+*/
