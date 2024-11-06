@@ -63,7 +63,7 @@ const fetchMock = () => {
       json: jest.fn().mockResolvedValue(mockCategories)
     } as unknown as Response)
     .mockResolvedValueOnce({
-      ok: 'true',
+      ok: true,
       json: jest.fn().mockResolvedValue(mockProducts)
     } as unknown as Response)
 }

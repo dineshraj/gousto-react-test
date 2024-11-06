@@ -8,10 +8,12 @@ interface CategoryProps {
 }
 
 const Category = ({category, selectedCategory, clickHandler}: CategoryProps) =>  {
+  const categoryClass = selectedCategory === category.id ? 'category__link selected' : 'category__link';
+
   return (
     <Link
       to={`?category=${category.id}`}
-      className={`category__link${(selectedCategory === category.id) ? ' selected' : ''}`}
+      className={categoryClass}
       onClick={() => clickHandler(category.id)}
     >
       {category.title}

@@ -7,10 +7,12 @@ interface ProductProps {
 }
 
 const Product = ({ selectedProduct, product, handleClick}: ProductProps) => {
+  const productClass = selectedProduct === product.id ? 'product__button selected' : 'product__button';
+
   return (
     <>
       <button 
-        className={`product__button${(selectedProduct === product.id) ? ' selected' : ''}`}
+        className={productClass}
         onClick={() => handleClick(product.id)}>
           {product.title}
       </button>

@@ -12,3 +12,7 @@ describe('Search', () => {
     expect(searchInput).toHaveValue('search term');
   });
 })
+
+
+
+// @TODO - move fuctions into a helper folder and write unit tests

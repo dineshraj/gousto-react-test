@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { PRODUCTS, CATEGORIES } from "./constants/data";
+
 import { Product as ProductType, Category as CategoryType } from "./types";
 import useFetchData from './hooks/useFetchData';
+
 import Product from "./Components/Product";
 import Category from "./Components/Category";
 import Search from "./Components/Search";
@@ -40,7 +42,6 @@ const App = () => {
 
   const productIsInSearchTermOrNoSearchTerm = (productName: string) => {
     const lowerCaseProductName = productName.toLowerCase();
-
     return lowerCaseProductName.includes(searchTerm) || searchTerm === '';
   }
 
