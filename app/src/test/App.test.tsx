@@ -199,8 +199,8 @@ describe('App', () => {
 
       const renderedProductOneDescription = screen.queryByText(mockProducts.data[0].description);
       const renderedProductTwoDescription = screen.queryByText(mockProducts.data[1].description);
-      expect(renderedProductOneDescription).not.toBeInTheDocument();
-      expect(renderedProductTwoDescription).not.toBeInTheDocument();
+      expect(renderedProductOneDescription).toHaveClass('hidden');
+      expect(renderedProductTwoDescription).toHaveClass('hidden');
     });
 
     it('clicking on a product displays the description', async () => {
@@ -209,12 +209,12 @@ describe('App', () => {
       const productButton = await screen.findByRole('button', { name: mockProducts.data[0].title});
 
       const renderedProductOneTitle = screen.queryByText(mockProducts.data[0].description);
-      expect(renderedProductOneTitle).not.toBeInTheDocument();
+      expect(renderedProductOneTitle).toHaveClass('hidden');
 
       userEvent.click(productButton);
 
       const renderedProductOneDescription = screen.queryByText(mockProducts.data[0].description);
-      expect(renderedProductOneDescription).toBeInTheDocument();
+      expect(renderedProductOneDescription).not.toHaveClass('hidden');
     });
 
     it('clicking on a product twices displays and then removes the description', async () => {
@@ -223,15 +223,15 @@ describe('App', () => {
       const productButton = await screen.findByRole('button', { name: mockProducts.data[0].title});
 
       const renderedProductOneTitle = screen.queryByText(mockProducts.data[0].description);
-      expect(renderedProductOneTitle).not.toBeInTheDocument();
+      expect(renderedProductOneTitle).toHaveClass('hidden');
 
       userEvent.click(productButton);
 
       const renderedProductOneDescription = screen.queryByText(mockProducts.data[0].description);
-      expect(renderedProductOneDescription).toBeInTheDocument();
+      expect(renderedProductOneDescription).not.toHaveClass('hidden');
 
       userEvent.click(productButton);
-      expect(renderedProductOneDescription).not.toBeInTheDocument();
+      expect(renderedProductOneDescription).toHaveClass('hidden');
     });
 
     it('adds a selected class when clicking on a product', async () => {
@@ -249,7 +249,7 @@ describe('App', () => {
       fetchMock();
     })
 
-    it('only lists products that have been searched for', async () => {
+    it('lists product titles that have been searched for', async () => {
       renderApp();
 
       const searchInput = await screen.findByTestId('search');
@@ -261,6 +261,22 @@ describe('App', () => {
       expect(renderedProductTwoTitle).toBeInTheDocument();
       
       fireEvent.change(searchInput, {target: { value: 'title1' }})
+      expect(renderedProductOneTitle).toBeInTheDocument();
+      expect(renderedProductTwoTitle).not.toBeInTheDocument();
+    });
+
+    it('lists product descriptions that have been searched for', async () => {
+      renderApp();
+
+      const searchInput = await screen.findByTestId('search');
+      
+      const renderedProductOneTitle = await screen.findByText(mockProducts.data[0].title);
+      const renderedProductTwoTitle = screen.queryByText(mockProducts.data[1].title);
+      
+      expect(renderedProductOneTitle).toBeInTheDocument();
+      expect(renderedProductTwoTitle).toBeInTheDocument();
+      
+      fireEvent.change(searchInput, {target: { value: 'description1' }})
       expect(renderedProductOneTitle).toBeInTheDocument();
       expect(renderedProductTwoTitle).not.toBeInTheDocument();
     });

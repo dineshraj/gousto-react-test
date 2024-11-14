@@ -20,18 +20,23 @@ const mockProducts = [
 ]
 
 describe('productIsInSearchTermOrNoSearchTerm', () => {
-  it('it returns true if the product should be in the search results', () => {
-    const productToBeDisplayed = productIsInSearchTermOrNoSearchTerm('productTitle1', 'itle1');
+  it('it returns true if the product name matches', () => {
+    const productToBeDisplayed = productIsInSearchTermOrNoSearchTerm('productTitle1', 'productDescription1', 'itle1');
+    expect(productToBeDisplayed).toBe(true);
+  })
+
+  it('it returns true if the product description matches', () => {
+    const productToBeDisplayed = productIsInSearchTermOrNoSearchTerm('productTitle1', 'productDescription1', 'escription1');
     expect(productToBeDisplayed).toBe(true);
   })
 
   it('it returns false if the product should not be in the search results', () => {
-    const productToBeDisplayed = productIsInSearchTermOrNoSearchTerm('productTitle1', 'itlfserfe');
+    const productToBeDisplayed = productIsInSearchTermOrNoSearchTerm('productTitle1', 'productDescription1', 'itlfserfe');
     expect(productToBeDisplayed).toBe(false);
   })
 
   it('is able to match names with different cases', () => {
-    const productToBeDisplayed = productIsInSearchTermOrNoSearchTerm('productTitle1', 'title1');
+    const productToBeDisplayed = productIsInSearchTermOrNoSearchTerm('productTitle1', 'productDescription1', 'title1');
     expect(productToBeDisplayed).toBe(true);
   });
 })

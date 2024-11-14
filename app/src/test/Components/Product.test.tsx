@@ -30,11 +30,11 @@ describe('Product', () => {
 
   });
 
-  it('displays the description when it is selected', async () => {
-    render(<Product selectedProduct='id1' product={productMock} handleClick={() => {}}/>);
+  it('hides the description when it is not selected', async () => {
+    render(<Product selectedProduct='' product={productMock} handleClick={() => {}}/>);
     const renderedProduct = await screen.findByTestId('product-description');
 
-    expect(renderedProduct).toHaveClass('product__descriptiom');
+    expect(renderedProduct).toHaveClass('hidden');
 
   })
 })

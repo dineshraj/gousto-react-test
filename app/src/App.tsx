@@ -41,7 +41,7 @@ const App = () => {
   const renderProduct = (product: ProductType) => {
     return (
       productIsInSelectedCategoryOrNoCategory(product.categories, selectedCategory) &&
-      productIsInSearchTermOrNoSearchTerm(product.title, searchTerm) ?
+      productIsInSearchTermOrNoSearchTerm(product.title, product.description, searchTerm) ?
         <Product selectedProduct={selectedProduct} product={product} handleClick={toggleSelectedProduct} /> : null
     )
   }

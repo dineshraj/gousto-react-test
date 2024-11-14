@@ -8,7 +8,7 @@ interface ProductProps {
 
 const Product = ({ selectedProduct, product, handleClick}: ProductProps) => {
   const productClass = selectedProduct === product.id ? 'product__button selected' : 'product__button';
-
+  const descriptionClass = selectedProduct !== product.id ? 'product__description hidden' : 'product__description';
   return (
     <>
       <button 
@@ -16,7 +16,7 @@ const Product = ({ selectedProduct, product, handleClick}: ProductProps) => {
         onClick={() => handleClick(product.id)}>
           {product.title}
       </button>
-      {selectedProduct === product.id && <p data-testid="product-description" className="product__descriptiom">{product.description}</p>}
+      <p data-testid="product-description" className={descriptionClass}>{product.description}</p>
     </>
   )
 };
