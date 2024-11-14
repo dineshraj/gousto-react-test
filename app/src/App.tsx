@@ -59,9 +59,11 @@ const App = () => {
       <Search searchTerm={searchTerm} handleSearchTermInput={handleSearchTermInput} />
       <ul className="products">
         {products.map((product: ProductType, i) => {
-          return <li className="product" key={i}>{renderProduct(product)}</li>
-          })
-        }
+          return (
+            product.is_for_sale &&
+            <li className="product" key={i}>{renderProduct(product)}</li>
+          )
+        })}
       </ul>
     </>
   );

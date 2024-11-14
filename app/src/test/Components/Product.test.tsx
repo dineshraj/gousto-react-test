@@ -6,6 +6,7 @@ const productMock = {
   id: 'id1',
   title: 'productTitle1',
   description: 'productDescription1',
+  is_for_sale: true,
   categories: [
     "category1",
     "category2"

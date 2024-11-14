@@ -32,6 +32,7 @@ const mockProducts = {
     {
       title: 'productTitle1',
       description: 'productDescription1',
+      is_for_sale: true,
       categories: [
         "category1",
         "category2"
@@ -40,9 +41,19 @@ const mockProducts = {
     {
       title: 'productTitle2',
       description: 'productDescription2',
+      is_for_sale: true,
       categories: [
         "category3",
         "category4"
+      ]
+    },
+    {
+      title: 'productTitle3',
+      description: 'productDescription3',
+      is_for_sale: false,
+      categories: [
+        "category8",
+        "category9"
       ]
     }
   ]
@@ -151,6 +162,19 @@ describe('App', () => {
 
       expect(renderedProductOneTitle).toBeInTheDocument();
       expect(renderedProductTwoTitle).toBeInTheDocument();
+    });
+
+    it('does not display products which are not for sale', async () => {
+      renderApp();
+      
+
+      await waitFor(() => {
+        const renderedProductTwoTitle = screen.queryByText(mockProducts.data[1].title);
+        expect(renderedProductTwoTitle).toBeInTheDocument();
+      });
+      
+      const renderedProductThreeTitle = screen.queryByText(mockProducts.data[2].title);
+      expect(renderedProductThreeTitle).not.toBeInTheDocument();
     });
 
     it('only displays the products of the selected category', async () => {
