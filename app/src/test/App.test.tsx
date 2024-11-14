@@ -237,7 +237,7 @@ describe('App', () => {
       expect(renderedProductTwoTitle).toBeInTheDocument();
       
       fireEvent.change(searchInput, {target: { value: 'title1' }})
-
+screen.debug()
       expect(renderedProductOneTitle).toBeInTheDocument();
       expect(renderedProductTwoTitle).not.toBeInTheDocument();
     });

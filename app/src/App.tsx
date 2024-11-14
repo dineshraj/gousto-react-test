@@ -9,6 +9,10 @@ import Product from "./Components/Product";
 import Category from "./Components/Category";
 import Search from "./Components/Search";
 
+import getCategoryTitleFromId from './helpers/getCategoryTitleFromId';
+import productIsInSelectedCategoryOrNoCategory from './helpers/productIsInSelectedCategoryOrNoCategory';
+import productIsInSearchTermOrNoSearchTerm from './helpers/productIsInSearchTermOrNoSearchTerm';
+
 const App = () => {
   const categories = useFetchData(CATEGORIES);
   const products = useFetchData(PRODUCTS);
@@ -23,27 +27,8 @@ const App = () => {
     const params = new URLSearchParams(location.search);
     const categoryIdFromUrl = params.get('category') || '';
     setSelectedCategory(categoryIdFromUrl);
-    document.title = getCategoryFromId(categoryIdFromUrl) || document.title;
+    document.title = getCategoryTitleFromId(categoryIdFromUrl, categories) || document.title;
   }, [location.search, categories])
-
-  const getCategoryFromId = (categoryIdFromUrl: string) => {
-      const category: CategoryType =
-      categories
-      .find((category: CategoryType) => category.id === categoryIdFromUrl) as unknown as CategoryType;
-      
-      if (category) {
-        return category.title;
-      }
-  }
-
-  const productIsInSelectedCategoryOrNoCategory = (productCategories: Array<string>) => {
-    return productCategories.includes(selectedCategory) || selectedCategory === '';
-  }
-
-  const productIsInSearchTermOrNoSearchTerm = (productName: string) => {
-    const lowerCaseProductName = productName.toLowerCase();
-    return lowerCaseProductName.includes(searchTerm) || searchTerm === '';
-  }
 
   const toggleSelectedProduct = (currentProductId: string) => {
     selectedProduct === currentProductId ? setSelectedProduct('') : setSelectedProduct(currentProductId)
@@ -55,8 +40,8 @@ const App = () => {
 
   const renderProduct = (product: ProductType) => {
     return (
-      productIsInSelectedCategoryOrNoCategory(product.categories) &&
-      productIsInSearchTermOrNoSearchTerm(product.title) ?
+      productIsInSelectedCategoryOrNoCategory(product.categories, selectedCategory) &&
+      productIsInSearchTermOrNoSearchTerm(product.title, searchTerm) ?
         <Product selectedProduct={selectedProduct} product={product} handleClick={toggleSelectedProduct} /> : null
     )
   }
