@@ -13,6 +13,14 @@ import getCategoryTitleFromId from './helpers/getCategoryTitleFromId';
 import productIsInSelectedCategoryOrNoCategory from './helpers/productIsInSelectedCategoryOrNoCategory';
 import productIsInSearchTermOrNoSearchTerm from './helpers/productIsInSearchTermOrNoSearchTerm';
 
+/* 
+@TODO:
+* Make helper functions generic so they are not tied into how they are used
+* Better naming of variables
+* Respect the "always_on_menu" field in the feed
+* List the volume (stock?) next to the item
+*/
+
 const App = () => {
   const categories = useFetchData(CATEGORIES);
   const products = useFetchData(PRODUCTS);
